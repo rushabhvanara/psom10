@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demand Side Management (DSM) Simulation</title>
+    <!-- Include Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin: 0 0 8px 0;
+            color: #0f172a;
+        }
+
+        header p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.8em;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .metric-card .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        .info-panel {
+            margin-top: 20px;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .info-panel h3 {
+            color: var(--text);
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Demand Side Management (DSM) Simulator</h1>
+        <p>Interactive study of Peak Clipping, Valley Filling, and Load Shifting techniques</p>
+    </header>
+
+    <div class="grid">
+        <!-- Control Panel -->
+        <div class="card">
+            <h3>DSM Controls</h3>
+            
+            <div class="control-group">
+                <label>Select DSM Technique:</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="dsmMode" value="none" checked onchange="updateSimulation()">
+                        None (Baseline Load)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="dsmMode" value="clipping" onchange="updateSimulation()">
+                        Peak Clipping
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="dsmMode" value="filling" onchange="updateSimulation()">
+                        Valley Filling
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="dsmMode" value="shifting" onchange="updateSimulation()">
+                        Load Shifting
+                    </label>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <!-- Parameters Sliders -->
+            <div class="control-group" id="clipGroup">
+                <label for="peakLimit">Peak Cutoff Threshold: <span id="peakVal">80</span> MW</label>
+                <input type="range" id="peakLimit" min="60" max="95" value="80" oninput="updateSimulation()">
+            </div>
+
+            <div class="control-group" id="fillGroup">
+                <label for="valleyLimit">Valley Fill Floor: <span id="valleyVal">50</span> MW</label>
+                <input type="range" id="valleyLimit" min="35" max="65" value="50" oninput="updateSimulation()">
+            </div>
+        </div>
+
+        <!-- Main Display / Analytics Area -->
+        <div>
+            <!-- Performance Indicators -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>Peak Demand</h4>
+                    <div class="value" id="metricPeak">0 MW</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Min Demand</h4>
+                    <div class="value" id="metricMin">0 MW</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Avg Demand</h4>
+                    <div class="value" id="metricAvg">0 MW</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Load Factor</h4>
+                    <div class="value" id="metricLF">0 %</div>
+                </div>
+            </div>
+
+            <!-- Graph Area -->
+            <div class="card">
+                <div class="chart-container">
+                    <canvas id="loadChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educational Explanation Panel -->
+    <div class="card info-panel">
+        <h3 id="infoTitle">Baseline Profile Selected</h3>
+        <p id="infoText">Select a technique from the control panel to learn about its operational mechanisms and impact on the grid system performance indicators.</p>
+    </div>
+</div>
+
+<script>
+    // 24-hour Base Load Profile Data (MW)
+    const hours = Array.from({length: 24}, (_, i) => `${String(i).padStart(2, '0')}:00`);
+    const baseLoad = [35, 30, 28, 30, 35, 50, 75, 85, 80, 75, 70, 72, 75, 78, 80, 85, 95, 100, 98, 90, 80, 65, 50, 40];
+
+    let loadChart;
+
+    function initChart() {
+        const ctx = document.getElementById('loadChart').getContext('2d');
+        loadChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [
+                    {
+                        label: 'Original Demand Profile',
+                        data: baseLoad,
+                        borderColor: '#94a3b8',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.3,
+                        pointRadius: 2
+                    },
+                    {
+                        label: 'Modified Profile (DSM Applied)',
+                        data: [...baseLoad],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Time of Day (Hours)' } },
+                    y: { 
+                        title: { display: true, text: 'Demand (MW)' },
+                        min: 0,
+                        max: 120
+                    }
+                }
+            }
+        });
+        updateSimulation();
+    }
+
+    function updateSimulation() {
+        const mode = document.querySelector('input[name="dsmMode"]:checked').value;
+        const peakCutoff = parseFloat(document.getElementById('peakLimit').value);
+        const valleyFloor = parseFloat(document.getElementById('valleyLimit').value);
+
+        // Update Slider Labels
+        document.getElementById('peakVal').innerText = peakCutoff;
+        document.getElementById('valleyVal').innerText = valleyFloor;
+
+        // UI Control visibilities
+        document.getElementById('clipGroup').style.opacity = (mode === 'clipping' || mode === 'shifting') ? '1' : '0.4';
+        document.getElementById('fillGroup').style.opacity = (mode === 'filling') ? '1' : '0.4';
+
+        let modifiedLoad = [...baseLoad];
+        let infoTitle = "";
+        let infoText = "";
+
+        if (mode === 'clipping') {
+            // Peak Clipping Logic
+            modifiedLoad = modifiedLoad.map(val => Math.min(val, peakCutoff));
+            infoTitle = "Peak Clipping Technique";
+            infoText = "Direct reduction of peak demand loads above threshold. This technique is often executed by turning off high-power customer loads via direct load management (DLM) during grid stress. Total energy consumed is reduced.";
+        
+        } else if (mode === 'filling') {
+            // Valley Filling Logic
+            modifiedLoad = modifiedLoad.map(val => Math.max(val, valleyFloor));
+            infoTitle = "Valley Filling Technique";
+            infoText = "Builds off-peak loads when energy supply is abundant or cheap. Examples include incentive programs to encourage electric vehicle (EV) charging or thermal energy storage during deep nighttime hours.";
+        
+        } else if (mode === 'shifting') {
+            // Load Shifting Logic (Shaves peak energy and distributes to off-peak periods)
+            let totalShavedEnergy = 0;
+            
+            // Step 1: Clip peak loads
+            for (let i = 0; i < modifiedLoad.length; i++) {
+                if (modifiedLoad[i] > peakCutoff) {
+                    totalShavedEnergy += (modifiedLoad[i] - peakCutoff);
+                    modifiedLoad[i] = peakCutoff;
+                }
+            }
+
+            // Step 2: Distribute shaved energy into off-peak valley periods (00:00 - 05:00 & 22:00 - 23:00)
+            const valleyIndices = [0, 1, 2, 3, 4, 22, 23];
+            const addedEnergyPerHour = totalShavedEnergy / valleyIndices.length;
+
+            valleyIndices.forEach(idx => {
+                modifiedLoad[idx] += addedEnergyPerHour;
+            });
+
+            infoTitle = "Load Shifting Technique";
+            infoText = "Combines elements of peak clipping and valley filling. Loads are shifted from peak times to off-peak times without altering total energy consumed over 24 hours. (e.g., using Smart Appliances, Battery Energy Storage Systems - BESS).";
+        
+        } else {
+            infoTitle = "Base Load Profile (No DSM)";
+            infoText = "Normal demand curve showing two distinct peaks (morning around 08:00 and an evening peak around 17:00-19:00).";
+        }
+
+        // Update Chart Data
+        loadChart.data.datasets[1].data = modifiedLoad;
+        loadChart.update();
+
+        // Calculate and Update Metrics
+        calculateMetrics(modifiedLoad);
+
+        // Update Explanation Card
+        document.getElementById('infoTitle').innerText = infoTitle;
+        document.getElementById('infoText').innerText = infoText;
+    }
+
+    function calculateMetrics(data) {
+        const peak = Math.max(...data);
+        const min = Math.min(...data);
+        const sum = data.reduce((a, b) => a + b, 0);
+        const avg = sum / data.length;
+        
+        // Load Factor Formula = (Average Load / Peak Load) * 100
+        const loadFactor = (avg / peak) * 100;
+
+        document.getElementById('metricPeak').innerText = `${peak.toFixed(1)} MW`;
+        document.getElementById('metricMin').innerText = `${min.toFixed(1)} MW`;
+        document.getElementById('metricAvg').innerText = `${avg.toFixed(1)} MW`;
+        document.getElementById('metricLF').innerText = `${loadFactor.toFixed(1)} %`;
+    }
+
+    // Initialize simulation on window load
+    window.onload = initChart;
+</script>
+</body>
+<footer style="text-align: center;">
+    <p>© Rushabh D. Vanara | Department of Electrical Engineering, Government Polytechnic, Junagadh</p>
+</footer>
+</html>
