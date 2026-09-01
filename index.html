@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f7fa">
+
+<title>Demand Side Management — Virtual Lab</title>
+
+<style>
+:root{
+    --primary:#1769aa;
+    --primary-dark:#0f4f83;
+    --cyan:#008cba;
+    --green:#16845b;
+    --red:#d94b5b;
+    --orange:#d9822b;
+    --purple:#7357a6;
+
+    --bg:#f4f6f8;
+    --surface:#ffffff;
+    --surface-2:#f8fafc;
+    --border:#d9e1e8;
+    --text:#1d2a35;
+    --muted:#687887;
+    --grid:#dfe6ec;
+
+    --shadow:0 2px 10px rgba(30,50,70,.08);
+    --radius:9px;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:
+        Inter,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    font-size:14px;
+    line-height:1.5;
+}
+
+/* ---------- Header ---------- */
+
+header{
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.header-inner{
+    max-width:1250px;
+    margin:auto;
+    min-height:52px;
+    padding:0 18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.home-link{
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:700;
+}
+
+.home-link:hover{
+    text-decoration:underline;
+}
+
+.header-title{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* ---------- Main ---------- */
+
+.container{
+    width:min(1250px,94%);
+    margin:auto;
+}
+
+.page-title{
+    padding:22px 0 15px;
+}
+
+.page-title h1{
+    margin:0;
+    font-size:27px;
+    color:#17344c;
+}
+
+.page-title p{
+    margin:5px 0 0;
+    color:var(--muted);
+}
+
+/* ---------- Cards ---------- */
+
+.card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+}
+
+.section{
+    margin:15px 0;
+}
+
+.section-title{
+    margin:0 0 9px;
+    font-size:17px;
+    color:#173d5c;
+}
+
+.section-subtitle{
+    color:var(--muted);
+    font-size:12px;
+    margin:-5px 0 10px;
+}
+
+/* ---------- Theory ---------- */
+
+.theory-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.theory{
+    padding:13px;
+    border-top:3px solid var(--accent);
+}
+
+.theory h3{
+    margin:0 0 4px;
+    font-size:14px;
+}
+
+.theory p{
+    margin:0;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.theory math{
+    margin-top:7px;
+}
+
+/* ---------- Lab Layout ---------- */
+
+.lab-grid{
+    display:grid;
+    grid-template-columns:285px minmax(0,1fr);
+    gap:12px;
+    align-items:start;
+}
+
+/* ---------- Controls ---------- */
+
+.controls{
+    padding:14px;
+}
+
+.controls h3{
+    margin:0 0 12px;
+    color:#173d5c;
+    font-size:16px;
+}
+
+.control{
+    margin-bottom:13px;
+}
+
+.control label{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:5px;
+    color:#334957;
+}
+
+.value{
+    color:var(--primary);
+    font-weight:800;
+}
+
+/* Slider */
+
+input[type="range"]{
+    display:block;
+    width:100%;
+    height:20px;
+    margin:0;
+    padding:0;
+    cursor:pointer;
+    accent-color:var(--primary);
+}
+
+input[type="range"]::-webkit-slider-runnable-track{
+    height:5px;
+    background:#d7e0e8;
+    border-radius:5px;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+    appearance:none;
+    width:15px;
+    height:15px;
+    margin-top:-5px;
+    border-radius:50%;
+    background:var(--primary);
+    border:2px solid #fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.25);
+}
+
+input[type="range"]::-moz-range-track{
+    height:5px;
+    background:#d7e0e8;
+    border-radius:5px;
+}
+
+input[type="range"]::-moz-range-thumb{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:var(--primary);
+    border:2px solid #fff;
+}
+
+select{
+    width:100%;
+    height:34px;
+    border:1px solid #c9d4de;
+    border-radius:6px;
+    background:#fff;
+    color:var(--text);
+    padding:5px 8px;
+    font-size:12px;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:6px;
+    padding:9px 12px;
+    font-weight:700;
+    cursor:pointer;
+    background:var(--primary);
+    color:#fff;
+}
+
+button:hover{
+    background:var(--primary-dark);
+}
+
+button.secondary{
+    background:#edf2f6;
+    color:#405566;
+    border:1px solid #d3dde5;
+}
+
+button.secondary:hover{
+    background:#e2e9ef;
+}
+
+.button-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:4px;
+}
+
+.control-note{
+    margin-top:13px;
+    padding:9px;
+    background:#f3f8fc;
+    border-left:3px solid var(--primary);
+    color:#566b7b;
+    font-size:11px;
+}
+
+/* ---------- Results ---------- */
+
+.simulation{
+    min-width:0;
+}
+
+.kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:7px;
+    margin-bottom:10px;
+}
+
+.kpi{
+    padding:10px;
+    min-width:0;
+}
+
+.kpi-label{
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+}
+
+.kpi-value{
+    margin-top:2px;
+    font-size:17px;
+    font-weight:800;
+    color:#173d5c;
+    white-space:nowrap;
+}
+
+.chart-card{
+    padding:11px;
+    margin-bottom:10px;
+}
+
+.chart-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:5px;
+}
+
+.chart-head h3{
+    margin:0;
+    font-size:14px;
+    color:#24455d;
+}
+
+.technique-name{
+    font-size:11px;
+    font-weight:700;
+    color:var(--primary);
+}
+
+.legend{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:10px;
+    color:var(--muted);
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+
+.legend-line{
+    width:18px;
+    height:3px;
+    border-radius:2px;
+}
+
+/* Canvas */
+
+canvas{
+    display:block;
+    width:100%;
+    height:300px;
+    background:#fff;
+}
+
+canvas.small{
+    height:170px;
+}
+
+/* ---------- Calculations ---------- */
+
+.calc-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+}
+
+.calc{
+    padding:12px;
+}
+
+.calc h3{
+    margin:0 0 5px;
+    font-size:13px;
+    color:#23475f;
+}
+
+.calc p{
+    color:var(--muted);
+    font-size:11px;
+    margin:0 0 6px;
+}
+
+.math-box{
+    padding:7px;
+    background:#f6f9fb;
+    border:1px solid #e0e7ed;
+    border-radius:5px;
+    overflow-x:auto;
+}
+
+.calc-result{
+    margin-top:7px;
+    font-weight:800;
+    color:var(--primary);
+    font-size:12px;
+}
+
+/* ---------- Diagram ---------- */
+
+.diagram{
+    padding:10px;
+}
+
+.diagram svg{
+    display:block;
+    width:100%;
+    height:120px;
+}
+
+/* ---------- Table ---------- */
+
+.table-card{
+    overflow:hidden;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:11px;
+}
+
+th,
+td{
+    padding:7px 9px;
+    border-bottom:1px solid #e5ebf0;
+    text-align:right;
+}
+
+th{
+    background:#f5f8fa;
+    color:#627687;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+th:first-child,
+td:first-child{
+    text-align:left;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+/* ---------- Observation ---------- */
+
+.observation-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:9px;
+}
+
+.observation{
+    padding:12px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+}
+
+.observation strong{
+    display:block;
+    color:var(--primary);
+    margin-bottom:3px;
+    font-size:12px;
+}
+
+.observation p{
+    margin:0;
+    color:var(--muted);
+    font-size:11px;
+}
+
+/* ---------- Footer ---------- */
+
+footer{
+    margin-top:30px;
+    padding:20px 10px;
+    text-align:center;
+    border-top:1px solid var(--border);
+    color:#70808d;
+    font-size:11px;
+    background:#fff;
+}
+
+footer strong{
+    color:#435969;
+}
+
+/* ---------- Responsive ---------- */
+
+@media(max-width:1000px){
+    .lab-grid{
+        grid-template-columns:250px minmax(0,1fr);
+    }
+
+    .kpi-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .calc-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:750px){
+    .header-title{
+        display:none;
+    }
+
+    .theory-grid{
+        grid-template-columns:1fr;
+    }
+
+    .lab-grid{
+        grid-template-columns:1fr;
+    }
+
+    .controls{
+        position:static;
+    }
+
+    .kpi-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .calc-grid{
+        grid-template-columns:1fr;
+    }
+
+    .observation-grid{
+        grid-template-columns:1fr;
+    }
+
+    canvas{
+        height:260px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a
+            class="home-link"
+            href="https://rushabhvanara.github.io/"
+            target="_blank"
+            rel="noopener"
+        >
+            ← Home
+        </a>
+
+
+    <div class="header-title">
+        Power System Operation &amp; Control • Virtual Laboratory
+    </div>
+</div>
+
+
+</header>
+
+<main class="container">
+
+
+<section class="page-title">
+    <h1>Demand Side Management — Virtual Lab</h1>
+    <p>
+        Study of peak clipping, valley filling and load shifting
+        through interactive simulation.
+    </p>
+</section>
+
+
+<!-- =====================================================
+     THEORY
+     ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">1. DSM Techniques</h2>
+
+    <div class="theory-grid">
+
+        <article class="card theory" style="--accent:#d94b5b">
+            <h3>Peak Clipping</h3>
+            <p>
+                Reduces demand above a selected peak threshold.
+            </p>
+
+            <math display="block">
+                <mrow>
+                    <msub><mi>L</mi><mi>pc</mi></msub>
+                    <mo>(</mo><mi>t</mi><mo>)</mo>
+                    <mo>=</mo>
+                    <mo>min</mo>
+                    <mo>[</mo>
+                    <mi>L</mi><mo>(</mo><mi>t</mi><mo>)</mo>
+                    <mo>,</mo>
+                    <msub><mi>P</mi><mi>c</mi></msub>
+                    <mo>]</mo>
+                </mrow>
+            </math>
+        </article>
+
+
+        <article class="card theory" style="--accent:#16845b">
+            <h3>Valley Filling</h3>
+            <p>
+                Increases demand during low-load periods.
+            </p>
+
+            <math display="block">
+                <mrow>
+                    <msub><mi>L</mi><mi>vf</mi></msub>
+                    <mo>(</mo><mi>t</mi><mo>)</mo>
+                    <mo>=</mo>
+                    <mo>max</mo>
+                    <mo>[</mo>
+                    <mi>L</mi><mo>(</mo><mi>t</mi><mo>)</mo>
+                    <mo>,</mo>
+                    <msub><mi>P</mi><mi>v</mi></msub>
+                    <mo>]</mo>
+                </mrow>
+            </math>
+        </article>
+
+
+        <article class="card theory" style="--accent:#1769aa">
+            <h3>Load Shifting</h3>
+            <p>
+                Moves flexible demand from peak to off-peak periods.
+            </p>
+
+            <math display="block">
+                <mrow>
+                    <msub><mi>L</mi><mi>ls</mi></msub>
+                    <mo>=</mo>
+                    <mi>L</mi>
+                    <mo>−</mo>
+                    <mi>Δ</mi><mi>L</mi>
+                    <mo>+</mo>
+                    <mi>Δ</mi><mi>L</mi>
+                </mrow>
+            </math>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- =====================================================
+     MAIN LAB
+     ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">2. Interactive Simulation</h2>
+
+    <div class="lab-grid">
+
+        <!-- ================= CONTROLS ================= -->
+
+        <aside class="card controls">
+
+            <h3>Simulation Controls</h3>
+
+            <div class="control">
+
+                <label for="technique">
+                    DSM Technique
+                </label>
+
+                <select id="technique">
+                    <option value="none">
+                        None — Baseline
+                    </option>
+
+                    <option value="clip">
+                        Peak Clipping
+                    </option>
+
+                    <option value="valley">
+                        Valley Filling
+                    </option>
+
+                    <option value="shift">
+                        Load Shifting
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="control">
+
+                <label for="peak">
+                    Peak Cutoff
+                    <span class="value" id="peakValue">
+                        80 MW
+                    </span>
+                </label>
+
+                <input
+                    id="peak"
+                    type="range"
+                    min="50"
+                    max="100"
+                    step="1"
+                    value="80"
+                >
+
+            </div>
+
+
+            <div class="control">
+
+                <label for="valley">
+                    Valley Floor
+                    <span class="value" id="valleyValue">
+                        50 MW
+                    </span>
+                </label>
+
+                <input
+                    id="valley"
+                    type="range"
+                    min="30"
+                    max="70"
+                    step="1"
+                    value="50"
+                >
+
+            </div>
+
+
+            <div class="control">
+
+                <label for="shiftFraction">
+                    Shift Fraction
+                    <span class="value" id="shiftValue">
+                        40%
+                    </span>
+                </label>
+
+                <input
+                    id="shiftFraction"
+                    type="range"
+                    min="10"
+                    max="80"
+                    step="5"
+                    value="40"
+                >
+
+            </div>
+
+
+            <div class="control">
+
+                <label for="destination">
+                    Shift To
+                </label>
+
+                <select id="destination">
+
+                    <option value="0">
+                        00:00–04:00
+                    </option>
+
+                    <option value="1">
+                        01:00–05:00
+                    </option>
+
+                    <option value="2">
+                        02:00–06:00
+                    </option>
+
+                    <option value="3">
+                        03:00–07:00
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="button-row">
+
+                <button id="runButton">
+                    Run Simulation
+                </button>
+
+                <button
+                    id="resetButton"
+                    class="secondary"
+                >
+                    Reset
+                </button>
+
+            </div>
+
+
+            <div class="control-note">
+
+                <b>Tip:</b>
+                Select a DSM technique and move its associated
+                slider. The graphs and calculations update immediately.
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= SIMULATION ================= -->
+
+        <div class="simulation">
+
+            <!-- KPI -->
+
+            <div class="kpi-grid">
+
+                <div class="card kpi">
+                    <div class="kpi-label">
+                        Peak Demand
+                    </div>
+                    <div class="kpi-value" id="peakResult">
+                        —
+                    </div>
+                </div>
+
+                <div class="card kpi">
+                    <div class="kpi-label">
+                        Minimum
+                    </div>
+                    <div class="kpi-value" id="minResult">
+                        —
+                    </div>
+                </div>
+
+                <div class="card kpi">
+                    <div class="kpi-label">
+                        Average
+                    </div>
+                    <div class="kpi-value" id="avgResult">
+                        —
+                    </div>
+                </div>
+
+                <div class="card kpi">
+                    <div class="kpi-label">
+                        Energy
+                    </div>
+                    <div class="kpi-value" id="energyResult">
+                        —
+                    </div>
+                </div>
+
+                <div class="card kpi">
+                    <div class="kpi-label">
+                        Load Factor
+                    </div>
+                    <div class="kpi-value" id="lfResult">
+                        —
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Small technical diagram -->
+
+            
+
+
+            <!-- LOAD CHART -->
+
+            <div class="card chart-card">
+
+                <div class="chart-head">
+
+                    <div>
+
+                        <h3>
+                            24-Hour Load Profile
+                        </h3>
+
+                        <div class="legend">
+
+                            <span class="legend-item">
+                                <i
+                                    class="legend-line"
+                                    style="background:#9aa8b3"
+                                ></i>
+                                Baseline
+                            </span>
+
+                            <span class="legend-item">
+                                <i
+                                    class="legend-line"
+                                    style="background:#1769aa"
+                                ></i>
+                                DSM
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        id="techniqueLabel"
+                        class="technique-name"
+                    >
+                        Baseline
+                    </span>
+
+                </div>
+
+                <canvas id="loadChart"></canvas>
+
+            </div>
+
+
+            <!-- DELTA -->
+
+            <div class="card chart-card">
+
+                <div class="chart-head">
+
+                    <div>
+
+                        <h3>
+                            Load Modification, ΔL(t)
+                        </h3>
+
+                        <div class="legend">
+
+                            <span class="legend-item">
+                                <i
+                                    class="legend-line"
+                                    style="background:#d94b5b"
+                                ></i>
+                                Removed
+                            </span>
+
+                            <span class="legend-item">
+                                <i
+                                    class="legend-line"
+                                    style="background:#16845b"
+                                ></i>
+                                Added
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        id="energyBalance"
+                        class="technique-name"
+                    >
+                        ΔE = 0 MWh
+                    </span>
+
+                </div>
+
+                <canvas
+                    id="deltaChart"
+                    class="small"
+                ></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================================
+     CALCULATIONS
+     ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        3. Mathematical Calculations
+    </h2>
+
+    <div class="calc-grid">
+
+        <article class="card calc">
+
+            <h3>Peak Demand</h3>
+
+            <p>
+                Maximum demand during the day.
+            </p>
+
+            <div class="math-box">
+
+                <math display="block">
+
+                    <mrow>
+
+                        <msub>
+                            <mi>P</mi>
+                            <mi>max</mi>
+                        </msub>
+
+                        <mo>=</mo>
+
+                        <munder>
+                            <mo>max</mo>
+                            <mi>t</mi>
+                        </munder>
+
+                        <mo>{</mo>
+
+                        <mi>L</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+
+                        <mo>}</mo>
+
+                    </mrow>
+
+                </math>
+
+            </div>
+
+            <div
+                class="calc-result"
+                id="calculationPeak"
+            >
+                —
+            </div>
+
+        </article>
+
+
+        <article class="card calc">
+
+            <h3>Daily Energy</h3>
+
+            <p>
+                One-hour sampling interval.
+            </p>
+
+            <div class="math-box">
+
+                <math display="block">
+
+                    <mrow>
+
+                        <mi>E</mi>
+                        <mo>=</mo>
+
+                        <munderover>
+                            <mo>Σ</mo>
+                            <mrow>
+                                <mi>t</mi>
+                                <mo>=</mo>
+                                <mn>0</mn>
+                            </mrow>
+                            <mn>23</mn>
+                        </munderover>
+
+                        <mi>L</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+
+                        <mo>Δ</mo>
+                        <mi>t</mi>
+
+                    </mrow>
+
+                </math>
+
+            </div>
+
+            <div
+                class="calc-result"
+                id="calculationEnergy"
+            >
+                —
+            </div>
+
+        </article>
+
+
+        <article class="card calc">
+
+            <h3>Load Factor</h3>
+
+            <p>
+                Average demand divided by peak demand.
+            </p>
+
+            <div class="math-box">
+
+                <math display="block">
+
+                    <mrow>
+
+                        <mi>LF</mi>
+                        <mo>=</mo>
+
+                        <mfrac>
+
+                            <msub>
+                                <mi>P</mi>
+                                <mi>avg</mi>
+                            </msub>
+
+                            <msub>
+                                <mi>P</mi>
+                                <mi>max</mi>
+                            </msub>
+
+                        </mfrac>
+
+                        <mo>×</mo>
+                        <mn>100</mn>
+                        <mo>%</mo>
+
+                    </mrow>
+
+                </math>
+
+            </div>
+
+            <div
+                class="calc-result"
+                id="calculationLF"
+            >
+                —
+            </div>
+
+        </article>
+
+
+        <article class="card calc">
+
+            <h3>Peak Reduction</h3>
+
+            <p>
+                Compared with the original profile.
+            </p>
+
+            <div class="math-box">
+
+                <math display="block">
+
+                    <mrow>
+
+                        <mi>R</mi>
+                        <mo>=</mo>
+
+                        <mfrac>
+
+                            <mrow>
+                                <msub>
+                                    <mi>P</mi>
+                                    <mi>base</mi>
+                                </msub>
+
+                                <mo>−</mo>
+
+                                <msub>
+                                    <mi>P</mi>
+                                    <mi>DSM</mi>
+                                </msub>
+                            </mrow>
+
+                            <msub>
+                                <mi>P</mi>
+                                <mi>base</mi>
+                            </msub>
+
+                        </mfrac>
+
+                        <mo>×</mo>
+                        <mn>100</mn>
+                        <mo>%</mo>
+
+                    </mrow>
+
+                </math>
+
+            </div>
+
+            <div
+                class="calc-result"
+                id="calculationReduction"
+            >
+                —
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     HOURLY TABLE
+     ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        4. Hourly Simulation Results
+    </h2>
+
+    <div class="card table-card">
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Time</th>
+                        <th>Baseline (MW)</th>
+                        <th>DSM (MW)</th>
+                        <th>ΔL (MW)</th>
+                        <th>Period</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="resultTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     OBSERVATIONS
+     ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        5. Expected Observations
+    </h2>
+
+    <div class="observation-grid">
+
+        <div class="observation">
+
+            <strong>Peak Clipping</strong>
+
+            <p>
+                Increasing the clipping action reduces the maximum
+                demand and generally improves the load factor.
+            </p>
+
+        </div>
+
+
+        <div class="observation">
+
+            <strong>Valley Filling</strong>
+
+            <p>
+                Increasing the valley floor raises low-demand
+                periods and increases utilization of available capacity.
+            </p>
+
+        </div>
+
+
+        <div class="observation">
+
+            <strong>Load Shifting</strong>
+
+            <p>
+                Energy is removed from selected peak hours and
+                transferred to off-peak hours.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROCEDURE
+     ===================================================== -->
+
+<section class="section">
+
+    <div class="card" style="padding:14px">
+
+        <h2 class="section-title">
+            6. Laboratory Procedure
+        </h2>
+
+        <ol style="margin:0;padding-left:20px;color:#5f7180;font-size:12px">
+
+            <li>
+                Select <b>None — Baseline</b> and note the
+                peak demand, average demand and load factor.
+            </li>
+
+            <li>
+                Select <b>Peak Clipping</b> and vary the
+                peak cutoff slider.
+            </li>
+
+            <li>
+                Select <b>Valley Filling</b> and vary the
+                valley floor slider.
+            </li>
+
+            <li>
+                Select <b>Load Shifting</b>, change the
+                shift fraction and destination period.
+            </li>
+
+            <li>
+                Compare the resulting profiles and numerical
+                performance indicators.
+            </li>
+
+        </ol>
+
+    </div>
+
+</section>
+
+<div style="text-align: center;">
+<section class="subtle" style="margin-top:10px">
+
+<h4>
+   <a href="https://rushabhvanara.github.io/psom10/index2.html" target="_blank" style="text-decoration: none;color: #3970b3">
+         Go to simple version 
+      </a>
+</h4>
+</div>
+</main>
+
+<footer>
+    Made with ❤️ by <strong>Rushabh Vanara</strong><br>
+    Electrical engineering department,Government polytechnic Junagadh
+</footer>
+
+<script>
+
+/* ============================================================
+   DEMAND SIDE MANAGEMENT VIRTUAL LAB
+   ============================================================ */
+
+/*
+   24-hour representative load profile in MW.
+
+   The profile contains:
+   - overnight valley
+   - daytime shoulder
+   - evening peak
+*/
+
+const BASELINE = [
+    43, 41, 40, 39, 41, 45,
+    52, 60, 67, 70, 68, 65,
+    63, 64, 66, 70, 76, 86,
+    95, 91, 82, 70, 58, 49
+];
+
+const HOURS = Array.from(
+    {length:24},
+    (_,i)=>i
+);
+
+
+/* ============================================================
+   ELEMENT REFERENCES
+   ============================================================ */
+
+const technique =
+    document.getElementById("technique");
+
+const peakSlider =
+    document.getElementById("peak");
+
+const valleySlider =
+    document.getElementById("valley");
+
+const shiftSlider =
+    document.getElementById("shiftFraction");
+
+const destination =
+    document.getElementById("destination");
+
+const peakValue =
+    document.getElementById("peakValue");
+
+const valleyValue =
+    document.getElementById("valleyValue");
+
+const shiftValue =
+    document.getElementById("shiftValue");
+
+const peakResult =
+    document.getElementById("peakResult");
+
+const minResult =
+    document.getElementById("minResult");
+
+const avgResult =
+    document.getElementById("avgResult");
+
+const energyResult =
+    document.getElementById("energyResult");
+
+const lfResult =
+    document.getElementById("lfResult");
+
+const calculationPeak =
+    document.getElementById("calculationPeak");
+
+const calculationEnergy =
+    document.getElementById("calculationEnergy");
+
+const calculationLF =
+    document.getElementById("calculationLF");
+
+const calculationReduction =
+    document.getElementById("calculationReduction");
+
+const techniqueLabel =
+    document.getElementById("techniqueLabel");
+
+const energyBalance =
+    document.getElementById("energyBalance");
+
+const resultTable =
+    document.getElementById("resultTable");
+
+const loadCanvas =
+    document.getElementById("loadChart");
+
+const deltaCanvas =
+    document.getElementById("deltaChart");
+
+
+/* ============================================================
+   SLIDER DISPLAY
+   ============================================================ */
+
+function updateSliderLabels(){
+
+    peakValue.textContent =
+        `${peakSlider.value} MW`;
+
+    valleyValue.textContent =
+        `${valleySlider.value} MW`;
+
+    shiftValue.textContent =
+        `${shiftSlider.value}%`;
+}
+
+
+/* ============================================================
+   DSM SIMULATION
+   ============================================================ */
+
+function simulate(){
+
+    const mode = technique.value;
+
+    const peak =
+        Number(peakSlider.value);
+
+    const valley =
+        Number(valleySlider.value);
+
+    const fraction =
+        Number(shiftSlider.value) / 100;
+
+    let output =
+        [...BASELINE];
+
+
+    /* ---------- Peak clipping ---------- */
+
+    if(mode === "clip"){
+
+        output =
+            BASELINE.map(
+                load => Math.min(load,peak)
+            );
+
+    }
+
+
+    /* ---------- Valley filling ---------- */
+
+    else if(mode === "valley"){
+
+        output =
+            BASELINE.map(
+                load => Math.max(load,valley)
+            );
+
+    }
+
+
+    /* ---------- Load shifting ---------- */
+
+    else if(mode === "shift"){
+
+        output =
+            [...BASELINE];
+
+
+        /*
+          Evening peak hours.
+        */
+
+        const peakHours =
+            [17,18,19,20,21];
+
+
+        /*
+          Five-hour destination window.
+        */
+
+        const start =
+            Number(destination.value);
+
+        const destinationHours =
+            [
+                start,
+                start+1,
+                start+2,
+                start+3,
+                start+4
+            ].map(
+                hour => hour % 24
+            );
+
+
+        let totalShift =
+            0;
+
+
+        /*
+          Remove a fraction of the
+          demand above the selected
+          peak threshold.
+        */
+
+        peakHours.forEach(hour => {
+
+            const available =
+                Math.max(
+                    0,
+                    BASELINE[hour] - peak
+                );
+
+            const removed =
+                available * fraction;
+
+            output[hour] -= removed;
+
+            totalShift += removed;
+
+        });
+
+
+        /*
+          Redistribute the removed energy
+          uniformly across the destination
+          off-peak window.
+        */
+
+        const addition =
+            totalShift /
+            destinationHours.length;
+
+
+        destinationHours.forEach(hour => {
+
+            output[hour] += addition;
+
+        });
+
+    }
+
+
+    return output;
+}
+
+
+/* ============================================================
+   METRICS
+   ============================================================ */
+
+function metrics(profile){
+
+    const peak =
+        Math.max(...profile);
+
+    const min =
+        Math.min(...profile);
+
+    const energy =
+        profile.reduce(
+            (sum,value)=>sum+value,
+            0
+        );
+
+    const average =
+        energy / profile.length;
+
+    const loadFactor =
+        average / peak * 100;
+
+    return {
+        peak,
+        min,
+        energy,
+        average,
+        loadFactor
+    };
+}
+
+
+/* ============================================================
+   CANVAS SETUP
+   ============================================================ */
+
+function setupCanvas(canvas){
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+    canvas.width =
+        Math.round(rect.width*dpr);
+
+    canvas.height =
+        Math.round(rect.height*dpr);
+
+    const ctx =
+        canvas.getContext("2d");
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    return {
+        ctx,
+        width:rect.width,
+        height:rect.height
+    };
+}
+
+
+/* ============================================================
+   CHART AXES
+   ============================================================ */
+
+function chartAxes(
+    ctx,
+    width,
+    height,
+    pad,
+    maxY
+){
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    /*
+      Background.
+    */
+
+    ctx.fillStyle="#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    /*
+      Horizontal grid.
+    */
+
+    ctx.font =
+        "10px Segoe UI";
+
+    for(let i=0;i<=5;i++){
+
+        const y =
+            height-pad.bottom-
+            (
+                (height-pad.top-pad.bottom)
+                * i/5
+            );
+
+        ctx.strokeStyle =
+            "#e3e9ee";
+
+        ctx.lineWidth=1;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            pad.left,
+            y
+        );
+
+        ctx.lineTo(
+            width-pad.right,
+            y
+        );
+
+        ctx.stroke();
+
+
+        const value =
+            maxY*i/5;
+
+        ctx.fillStyle =
+            "#718291";
+
+        ctx.textAlign =
+            "right";
+
+        ctx.fillText(
+            value.toFixed(0),
+            pad.left-7,
+            y+3
+        );
+
+    }
+
+
+    /*
+      X labels.
+    */
+
+    for(let i=0;i<24;i+=2){
+
+        const x =
+            pad.left+
+            (
+                width-pad.left-pad.right
+            )*
+            i/23;
+
+        ctx.fillStyle =
+            "#718291";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            `${String(i).padStart(2,"0")}:00`,
+            x,
+            height-10
+        );
+
+    }
+
+
+    /*
+      Axis lines.
+    */
+
+    ctx.strokeStyle =
+        "#8fa1af";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pad.left,
+        pad.top
+    );
+
+    ctx.lineTo(
+        pad.left,
+        height-pad.bottom
+    );
+
+    ctx.lineTo(
+        width-pad.right,
+        height-pad.bottom
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* ============================================================
+   COORDINATES
+   ============================================================ */
+
+function xPosition(
+    hour,
+    width,
+    pad
+){
+
+    return (
+        pad.left+
+        (
+            width-pad.left-pad.right
+        )*
+        hour/23
+    );
+}
+
+
+function yPosition(
+    value,
+    height,
+    pad,
+    maxY
+){
+
+    return (
+        height-pad.bottom-
+        (
+            height-pad.top-pad.bottom
+        )*
+        value/maxY
+    );
+}
+
+
+/* ============================================================
+   DRAW PROFILE
+   ============================================================ */
+
+function drawProfile(
+    ctx,
+    profile,
+    width,
+    height,
+    pad,
+    maxY,
+    color,
+    lineWidth,
+    dashed=false
+){
+
+    ctx.save();
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.lineWidth =
+        lineWidth;
+
+    ctx.lineJoin =
+        "round";
+
+    ctx.lineCap =
+        "round";
+
+
+    if(dashed){
+
+        ctx.setLineDash(
+            [6,5]
+        );
+
+    }
+
+
+    ctx.beginPath();
+
+
+    profile.forEach(
+        (value,hour)=>{
+
+            const x =
+                xPosition(
+                    hour,
+                    width,
+                    pad
+                );
+
+            const y =
+                yPosition(
+                    value,
+                    height,
+                    pad,
+                    maxY
+                );
+
+            if(hour===0){
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }else{
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.stroke();
+
+    ctx.restore();
+
+}
+
+
+/* ============================================================
+   LOAD CHART
+   ============================================================ */
+
+function drawLoadChart(profile){
+
+    const {
+        ctx,
+        width,
+        height
+    } = setupCanvas(loadCanvas);
+
+
+    const pad = {
+        left:45,
+        right:12,
+        top:15,
+        bottom:28
+    };
+
+
+    const maxY =
+        Math.ceil(
+            Math.max(
+                ...BASELINE,
+                ...profile
+            ) / 10
+        ) * 10;
+
+
+    chartAxes(
+        ctx,
+        width,
+        height,
+        pad,
+        maxY
+    );
+
+
+    /*
+      Peak highlight.
+    */
+
+    const peakStart =
+        xPosition(
+            17,
+            width,
+            pad
+        );
+
+    const peakEnd =
+        xPosition(
+            21,
+            width,
+            pad
+        );
+
+    ctx.fillStyle =
+        "rgba(217,75,91,.055)";
+
+    ctx.fillRect(
+        peakStart,
+        pad.top,
+        peakEnd-peakStart,
+        height-pad.top-pad.bottom
+    );
+
+
+    /*
+      Valley highlight.
+    */
+
+    const valleyEnd =
+        xPosition(
+            5,
+            width,
+            pad
+        );
+
+    ctx.fillStyle =
+        "rgba(22,132,91,.045)";
+
+    ctx.fillRect(
+        pad.left,
+        pad.top,
+        valleyEnd-pad.left,
+        height-pad.top-pad.bottom
+    );
+
+
+    /*
+      Baseline.
+    */
+
+    drawProfile(
+        ctx,
+        BASELINE,
+        width,
+        height,
+        pad,
+        maxY,
+        "#9aa8b3",
+        2,
+        true
+    );
+
+
+    /*
+      DSM profile.
+    */
+
+    drawProfile(
+        ctx,
+        profile,
+        width,
+        height,
+        pad,
+        maxY,
+        "#1769aa",
+        3,
+        false
+    );
+
+
+    /*
+      DSM data points.
+    */
+
+    profile.forEach(
+        (value,hour)=>{
+
+            const x =
+                xPosition(
+                    hour,
+                    width,
+                    pad
+                );
+
+            const y =
+                yPosition(
+                    value,
+                    height,
+                    pad,
+                    maxY
+                );
+
+            ctx.fillStyle =
+                "#1769aa";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x,
+                y,
+                2.8,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   DELTA CHART
+   ============================================================ */
+
+function drawDeltaChart(profile){
+
+    const {
+        ctx,
+        width,
+        height
+    } = setupCanvas(deltaCanvas);
+
+
+    const delta =
+        profile.map(
+            (value,i)=>
+                value-BASELINE[i]
+        );
+
+
+    const maximum =
+        Math.max(
+            5,
+            ...delta.map(
+                value=>Math.abs(value)
+            )
+        );
+
+
+    const maxY =
+        Math.ceil(
+            maximum/5
+        )*5;
+
+
+    const pad = {
+        left:45,
+        right:12,
+        top:15,
+        bottom:28
+    };
+
+
+    chartAxes(
+        ctx,
+        width,
+        height,
+        pad,
+        maxY
+    );
+
+
+    /*
+      Zero line.
+    */
+
+    const zero =
+        yPosition(
+            0,
+            height,
+            pad,
+            maxY
+        );
+
+
+    ctx.strokeStyle =
+        "#8fa1af";
+
+    ctx.setLineDash(
+        [5,4]
+    );
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pad.left,
+        zero
+    );
+
+    ctx.lineTo(
+        width-pad.right,
+        zero
+    );
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+
+    /*
+      Bars.
+    */
+
+    const barWidth =
+        Math.max(
+            5,
+            (
+                width-pad.left-pad.right
+            )/30
+        );
+
+
+    delta.forEach(
+        (value,hour)=>{
+
+            if(Math.abs(value)<0.001)
+                return;
+
+
+            const x =
+                xPosition(
+                    hour,
+                    width,
+                    pad
+                );
+
+
+            const y =
+                yPosition(
+                    value,
+                    height,
+                    pad,
+                    maxY
+                );
+
+
+            ctx.fillStyle =
+                value<0
+                ? "#d94b5b"
+                : "#16845b";
+
+
+            ctx.fillRect(
+                x-barWidth/2,
+                Math.min(y,zero),
+                barWidth,
+                Math.abs(zero-y)
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+function updateTable(profile){
+
+    resultTable.innerHTML="";
+
+
+    profile.forEach(
+        (value,hour)=>{
+
+            const delta =
+                value-BASELINE[hour];
+
+
+            let period =
+                "Shoulder";
+
+
+            if(hour<=5){
+
+                period="Off-peak";
+
+            }else if(
+                [17,18,19,20,21].includes(hour)
+            ){
+
+                period="Peak";
+
+            }
+
+
+            const row =
+                document.createElement("tr");
+
+
+            const deltaText =
+                delta>0
+                ? `+${delta.toFixed(1)}`
+                : delta.toFixed(1);
+
+
+            const deltaColor =
+                delta<0
+                ? "#d94b5b"
+                : delta>0
+                ? "#16845b"
+                : "#718291";
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${String(hour).padStart(2,"0")}:00
+                </td>
+
+                <td>
+                    ${BASELINE[hour].toFixed(1)}
+                </td>
+
+                <td>
+                    ${value.toFixed(1)}
+                </td>
+
+                <td style="
+                    color:${deltaColor};
+                    font-weight:700;
+                ">
+                    ${deltaText}
+                </td>
+
+                <td>
+                    ${period}
+                </td>
+
+            `;
+
+
+            resultTable.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   MAIN UPDATE
+   ============================================================ */
+
+function updateSimulation(){
+
+    updateSliderLabels();
+
+
+    const profile =
+        simulate();
+
+
+    const base =
+        metrics(BASELINE);
+
+
+    const result =
+        metrics(profile);
+
+
+    /*
+      KPI values.
+    */
+
+    peakResult.textContent =
+        `${result.peak.toFixed(1)} MW`;
+
+    minResult.textContent =
+        `${result.min.toFixed(1)} MW`;
+
+    avgResult.textContent =
+        `${result.average.toFixed(1)} MW`;
+
+    energyResult.textContent =
+        `${result.energy.toFixed(1)} MWh`;
+
+    lfResult.textContent =
+        `${result.loadFactor.toFixed(1)}%`;
+
+
+    /*
+      Mathematical results.
+    */
+
+    calculationPeak.textContent =
+        `Pmax = ${result.peak.toFixed(2)} MW`;
+
+    calculationEnergy.textContent =
+        `E = ${result.energy.toFixed(2)} MWh`;
+
+    calculationLF.textContent =
+        `LF = ${result.loadFactor.toFixed(2)} %`;
+
+
+    const reduction =
+        (
+            (base.peak-result.peak)
+            /base.peak
+        )*100;
+
+
+    calculationReduction.textContent =
+        `R = ${reduction.toFixed(2)} %`;
+
+
+    /*
+      Energy balance.
+    */
+
+    const energyDifference =
+        result.energy-base.energy;
+
+
+    energyBalance.textContent =
+        `ΔE = ${
+            energyDifference>=0
+            ? "+"
+            : ""
+        }${energyDifference.toFixed(2)} MWh`;
+
+
+    /*
+      Technique label.
+    */
+
+    const names = {
+
+        none:
+            "Baseline",
+
+        clip:
+            "Peak Clipping",
+
+        valley:
+            "Valley Filling",
+
+        shift:
+            "Load Shifting"
+
+    };
+
+
+    techniqueLabel.textContent =
+        names[technique.value];
+
+
+    /*
+      Draw everything.
+    */
+
+    drawLoadChart(profile);
+
+    drawDeltaChart(profile);
+
+    updateTable(profile);
+
+}
+
+
+/* ============================================================
+   EVENT LISTENERS
+   ============================================================ */
+
+/*
+  IMPORTANT:
+  The range sliders use the "input" event rather than
+  relying on change/blur. Therefore the simulation updates
+  continuously while the slider is being dragged.
+*/
+
+peakSlider.addEventListener(
+    "input",
+    updateSimulation
+);
+
+valleySlider.addEventListener(
+    "input",
+    updateSimulation
+);
+
+shiftSlider.addEventListener(
+    "input",
+    updateSimulation
+);
+
+technique.addEventListener(
+    "change",
+    updateSimulation
+);
+
+destination.addEventListener(
+    "change",
+    updateSimulation
+);
+
+
+/*
+  Run button.
+*/
+
+document
+    .getElementById("runButton")
+    .addEventListener(
+        "click",
+        updateSimulation
+    );
+
+
+/*
+  Reset.
+*/
+
+document
+    .getElementById("resetButton")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            technique.value =
+                "none";
+
+            peakSlider.value =
+                80;
+
+            valleySlider.value =
+                50;
+
+            shiftSlider.value =
+                40;
+
+            destination.value =
+                0;
+
+            updateSimulation();
+
+        }
+    );
+
+
+/*
+  Resize charts when browser size changes.
+*/
+
+window.addEventListener(
+    "resize",
+    updateSimulation
+);
+
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+
+updateSimulation();
+
+</script>
+
+</body>
+</html>
